@@ -12,8 +12,7 @@ def gcd(a,b):
     if a % smaller == 0 and b % smaller == 0:
         print(smaller, 'is the H.C.F')
         return
-    i = 1
-    n = smaller//2
+    i = smaller//2
     while i > 0:
         if a%i == 0 and b%i == 0:
             print(i, 'is the H.C.F')
