@@ -11,14 +11,10 @@ x = 0:2*pi/n1:4*pi;
 s = 8 * sin(x); % Amplitude of 8
 
 % Plot the analog signal
-subplot(3,1,1); plot(s);
-title('Analog Signal'); ylabel('Amplitude'); xlabel('Time');
+subplot(3,1,1); plot(s); title('Analog Signal'); ylabel('Amplitude'); xlabel('Time');
 
 % Plot the sampled signal
-subplot(3,1,2);
-stem(s); 
-grid on;
-title('Sampled Signal'); ylabel('Amplitude'); xlabel('Time');
+subplot(3,1,2); stem(s); title('Sampled Signal'); ylabel('Amplitude'); xlabel('Time');
 
 % Quantization
 vmax = 8;
@@ -46,8 +42,8 @@ code = de2bi(ind, 'left-msb');
 coded = reshape(code', 1, numel(code)); % Convert to serial bit stream
 
 % Plot the encoded signal
-subplot(2,1,1); grid on; stairs(coded);
-axis([0 100 -2 3]); title('Encoded Signal'); ylabel('Amplitude'); xlabel('Time');
+%subplot(2,1,1); grid on; stairs(coded);
+%axis([0 100 -2 3]); title('Encoded Signal'); ylabel('Amplitude'); xlabel('Time');
 
 % Demodulation
 qunt = reshape(coded, n, []).'; % Reshape to matrix with n columns

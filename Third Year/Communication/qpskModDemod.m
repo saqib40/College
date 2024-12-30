@@ -1,127 +1,83 @@
-% QPSK MODULATION AND DEMODULATION
+% QPSK Modulation and Demodulation
+clc;
+clear;
+close all;
 
-clc;            % Clear command window
-clear all;      % Clear all variables from workspace
-close all;      % Close all figure windows
-
-Tb = 1;         % Bit duration
-t = 0:(Tb/100):Tb; % Time vector for one bit duration
-fc = 1;         % Carrier frequency
+Tb = 1;                          % Bit duration
+t = 0:(Tb/100):Tb;               % Time vector for one bit duration
+fc = 1;                          % Carrier frequency
 
 % Generate carrier signals
 c1 = sqrt(2/Tb) * cos(2*pi*fc*t); % In-phase carrier signal
 c2 = sqrt(2/Tb) * sin(2*pi*fc*t); % Quadrature-phase carrier signal
 
-% Generate message signal
-N = 8;          % Number of bits
-m = rand(1, N); % Random binary data
-t1 = 0;         % Initial time for bit duration
-t2 = Tb;        % End time for bit duration
+% Generate random binary data
+N = 8;                           % Number of bits
+m = randi([0, 1], 1, N);         % Random binary data
 
-% Initialize signals
-odd_sig = [];
-even_sig = [];
+% Initialize QPSK signal
 qpsk = [];
 
-% Modulation
-for i = 1:2:(N-1)
-    t = t1:(Tb/100):t2;
+% QPSK Modulation
+for i = 1:2:N
+    t = (i-1)*Tb/100 : Tb/100 : i*Tb;
     
-    % Odd bits modulated signal
-    if m(i) > 0.5
-        m(i) = 1;
-        m_s = ones(1, length(t));
-    else
-        m(i) = 0;
-        m_s = -1 * ones(1, length(t));
-    end
-    odd_sig(i,:) = c1 .* m_s;
-    
-    % Even bits modulated signal
-    if m(i+1) > 0.5
-        m(i+1) = 1;
-        m_s = ones(1, length(t));
-    else
-        m(i+1) = 0;
-        m_s = -1 * ones(1, length(t));
-    end
-    even_sig(i,:) = c2 .* m_s;
+    % Modulate odd and even bits
+    m_s1 = (m(i)*2-1) * ones(1, length(t));   % Map to ±1
+    m_s2 = (m(i+1)*2-1) * ones(1, length(t)); % Map to ±1
     
     % QPSK signal
-    qpsk(i,:) = odd_sig(i,:) + even_sig(i,:);
-    
-    % Plot the QPSK modulated signal
-    subplot(3,2,4);
-    plot(t, qpsk(i,:));
-    title('QPSK Signal');
-    xlabel('Time (t)');
-    ylabel('s(t)');
-    grid on;
-    hold on;
-    
-    % Update time intervals for next bit duration
-    t1 = t1 + (Tb + 0.01);
-    t2 = t2 + (Tb + 0.01);
+    qpsk = [qpsk, (c1 .* m_s1) + (c2 .* m_s2)];
 end
-hold off;
 
-% Plot the binary data bits and carrier signals
-subplot(3,2,1);
-stem(m);
+% Plot binary data bits
+subplot(3, 2, 1);
+stem(m, 'filled');
 title('Binary Data Bits');
 xlabel('n');
 ylabel('b(n)');
 grid on;
 
-subplot(3,2,2);
-plot(0:(Tb/100):Tb, c1);
+% Plot carrier signals
+subplot(3, 2, 2);
+plot(t, c1);
 title('Carrier Signal 1');
 xlabel('Time (t)');
 ylabel('c1(t)');
 grid on;
 
-subplot(3,2,3);
-plot(0:(Tb/100):Tb, c2);
+subplot(3, 2, 3);
+plot(t, c2);
 title('Carrier Signal 2');
 xlabel('Time (t)');
 ylabel('c2(t)');
 grid on;
 
-% QPSK Demodulation
-t1 = 0;
-t2 = Tb;
-demod = zeros(1, N); % Initialize demodulated signal
+% Plot QPSK modulated signal
+subplot(3, 2, 4);
+plot(0:Tb/100:(N/2)*Tb-Tb/100, qpsk);
+title('QPSK Signal');
+xlabel('Time (t)');
+ylabel('s(t)');
+grid on;
 
-for i = 1:2:N-1
-    t = t1:(Tb/100):t2;
+% QPSK Demodulation
+demod = zeros(1, N); % Initialize demodulated signal
+for i = 1:2:N
+    t = (i-1)*Tb/100 : Tb/100 : i*Tb;
     
-    % Correlator
-    x1 = sum(c1 .* qpsk(i,:));
-    x2 = sum(c2 .* qpsk(i,:));
+    % Correlator outputs
+    x1 = sum(c1 .* qpsk((i-1)*length(t)+1:i*length(t)));
+    x2 = sum(c2 .* qpsk((i-1)*length(t)+1:i*length(t)));
     
     % Decision device
-    if x1 > 0 && x2 > 0
-        demod(i) = 1;
-        demod(i+1) = 1;
-    elseif x1 > 0 && x2 < 0
-        demod(i) = 1;
-        demod(i+1) = 0;
-    elseif x1 < 0 && x2 < 0
-        demod(i) = 0;
-        demod(i+1) = 0;
-    elseif x1 < 0 && x2 > 0
-        demod(i) = 0;
-        demod(i+1) = 1;
-    end
-    
-    % Update time intervals for next bit duration
-    t1 = t1 + (Tb + 0.01);
-    t2 = t2 + (Tb + 0.01);
+    demod(i)   = x1 > 0;  % Map back to binary
+    demod(i+1) = x2 > 0;  % Map back to binary
 end
 
-% Plot the QPSK demodulated bits
-subplot(3,2,5);
-stem(demod);
+% Plot QPSK demodulated bits
+subplot(3, 2, 5);
+stem(demod, 'filled');
 title('QPSK Demodulated Bits');
 xlabel('n');
 ylabel('b(n)');
