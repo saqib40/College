@@ -1,0 +1,1 @@
+// almost same as that of nand
