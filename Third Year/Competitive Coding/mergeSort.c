@@ -9,10 +9,10 @@ void mergeSort(int A[], int n) {
         L[i] = A[i];
     }
     for(int i=mid; i<n; i++) {
-        R[i] = A[i];
+        R[i-mid] = A[i];
     }
     mergeSort(L,mid);
-    mergeSort(R,mid);
+    mergeSort(R,n-mid);
     merge(L,R,A,mid,n-mid);
 }
 void merge(int L[], int R[], int A[], int nL, int nR) {

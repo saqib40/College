@@ -19,7 +19,7 @@ int knapsack(int W, int wt[], int val[], int index) {
     int notTake = knapsack(W, wt, val, index-1);
     int take = INT_MIN;
     if(wt[index] <= W) {
-        take = val[index] + knanpsack(W-wt[index],wt,val,index-1);
+        take = val[index] + knapsack(W-wt[index],wt,val,index-1);
     }
     return max(take,notTake);
 }
