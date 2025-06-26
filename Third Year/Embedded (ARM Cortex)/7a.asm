@@ -29,7 +29,7 @@ LOOP
         B       STOP
 
 FOUND
-        MVN     R0, #0                        ; Set R0 = 0xFFFFFFFF
+        MVN     R0, #0xFF                     ; Set R0 = 0xFFFFFFFF
 
 STOP
         B       STOP                          ; Infinite loop

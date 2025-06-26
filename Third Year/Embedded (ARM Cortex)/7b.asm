@@ -1,3 +1,4 @@
+; Actually use the same approach as of previous
         AREA SRC, DATA, READONLY        ; Source data section
 SRC     DCD 0x0000008F, 0x00000012, 0x00000024, 0x00000023, 0x00000011
 
