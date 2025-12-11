@@ -1,12 +1,8 @@
 # Experiment the steps to connect with a data source and choose between 
 # live connection and extract.
 
-
-# Step 1: Install required packages (run only once)
 install.packages("DBI")       # Database Interface (generic functions)
 install.packages("RSQLite")   # SQLite backend
-# install.packages("RODBC")     # For other DBs, not used here
-# install.packages("odbc")      # Also for general DB connection
 
 library(RSQLite)
 library(DBI)
