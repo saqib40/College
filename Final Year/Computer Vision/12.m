@@ -1,45 +1,28 @@
-% EXPERIMENT 12: Shape Features + Minimum Distance Classifier
+% EXPERIMENT 12: Shape Classification
 clc; clear; close all;
 
-%% ---- PREPROCESSING ----
-img = imread('shapes.png');          % Binary shapes image
-bw  = imcomplement(imbinarize(rgb2gray(img)));
-bw  = bwareaopen(bw,100);
+bw = imbinarize(rgb2gray(imread('shapes.png')));
+bw = bwareaopen(imcomplement(bw),100);
 
-%% ---- FEATURE EXTRACTION ----
 [L,n] = bwlabel(bw);
-stats = regionprops(L,'Area','Perimeter','Eccentricity','BoundingBox');
+s = regionprops(L,'Area','Perimeter','Eccentricity','BoundingBox');
 
-feat = zeros(n,3);   % [Compactness, Eccentricity, Aspect Ratio]
 for i = 1:n
-    A = stats(i).Area;  P = stats(i).Perimeter;
-    feat(i,1) = (P^2)/(4*pi*A);                % Compactness
-    feat(i,2) = stats(i).Eccentricity;
-    bb = stats(i).BoundingBox;
-    feat(i,3) = bb(3)/bb(4);                   % Aspect Ratio
+    f(i,1) = (s(i).Perimeter^2)/(4*pi*s(i).Area); % Compactness
+    f(i,2) = s(i).Eccentricity;
+    f(i,3) = s(i).BoundingBox(3)/s(i).BoundingBox(4);
 end
 
-%% ---- TRAINING LABELS (Example) ----
-% 1 = Circle, 2 = Triangle, 3 = Square
-labels = [1 2 3];
+labels = [1 2 3];                     % Circle, Triangle, Square
 
-%% ---- MINIMUM DISTANCE CLASSIFIER ----
-pred = zeros(n,1);
 for i = 1:n
-    d = vecnorm(feat - feat(i,:),2,2);
-    [~,idx] = min(d);
-    pred(i) = labels(idx);
+    [~,c(i)] = min(sum((f - f(i,:)).^2,2));
 end
 
-acc = mean(pred==labels')*100;
-fprintf('Accuracy = %.2f%%\n',acc);
-
-%% ---- VISUALIZATION ----
-figure, imshow(img), title('Detected Shapes');
-hold on;
+imshow(imread('shapes.png')), hold on
 for i = 1:n
-    rectangle('Position',stats(i).BoundingBox,'EdgeColor','g','LineWidth',2);
-    text(stats(i).BoundingBox(1),stats(i).BoundingBox(2)-10,...
-        sprintf('Class %d',pred(i)),'Color','r','FontWeight','bold');
+    rectangle('Position',s(i).BoundingBox,'EdgeColor','g');
+    text(s(i).BoundingBox(1),s(i).BoundingBox(2)-5,...
+        num2str(labels(c(i))),'Color','r');
 end
-hold off;
+hold off

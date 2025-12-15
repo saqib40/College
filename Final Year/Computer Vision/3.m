@@ -1,4 +1,7 @@
 % EXPERIMENT 3: Spatial Domain Filtering
+% Implement spatial domain filtering techniques such as image smoothing
+% and sharpening using average, Gaussian, and Laplacian filters. 
+
 clc; clear; close all;
 
 % Read & preprocess image

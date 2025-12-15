@@ -1,4 +1,7 @@
 % EXPERIMENT 2: Point Operations & Histogram Processing
+% To perform Point Operations and Histogram Processing including image negative, contrast stretching,
+% and histogram equalization 
+
 clc; clear; close all;
 
 img = rgb2gray(imread('peppers.png'));
@@ -15,7 +18,9 @@ subplot(2,4,6), imhist(neg), title('Hist');
 
 %% ---- CONTRAST STRETCHING ----
 d = double(img);
-cs = uint8(255*(d-min(d(:)))/(max(d(:))-min(d(:))));
+min = min(d(:));
+max = max(d(:));
+cs = uint8(255*(d-min)/(max-min));
 subplot(2,4,3), imshow(cs), title('Contrast Stretch');
 subplot(2,4,7), imhist(cs), title('Hist');
 

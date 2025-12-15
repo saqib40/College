@@ -1,4 +1,6 @@
-% EXPERIMENT 10: Color-Based Segmentation (HSV)
+% EXPERIMENT 10: 
+% To perform Color-based Segmentation. Segment images based on color thresholds in HSV space
+
 clc; clear; close all;
 
 rgb = imread('peppers.png');

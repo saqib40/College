@@ -1,4 +1,5 @@
-% EXPERIMENT 5: Frequency Domain Analysis using DFT
+% EXPERIMENT 5: To perform Frequency Domain Analysis using DFT and visualiz magnitude spectrum. 
+
 clc; clear; close all;
 
 img = im2double(rgb2gray(imread('peppers.png')));

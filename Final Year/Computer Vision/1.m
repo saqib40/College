@@ -1,4 +1,7 @@
 % EXPERIMENT 1: Basic Image Handling
+% To perform basic Image Handling and processing operations
+% on the image. Image Reading, Displaying, and Basic Manipulations. 
+
 clc; clear; close all;
 
 %% ---- IMAGE READING ----

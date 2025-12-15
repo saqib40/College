@@ -1,4 +1,7 @@
 % EXPERIMENT 4: Geometric Transformations
+% To perform Geometric Transformations including image scaling, rotation
+% and translation on images. 
+
 clc; clear; close all;
 
 img = imread('peppers.png');

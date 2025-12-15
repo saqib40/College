@@ -1,4 +1,7 @@
 % EXPERIMENT 11: Morphological Operations
+% To Perform morphological operations including erosion, dilation,
+% opening, closing, and hit-or-miss transformation for shape-based processing. 
+
 clc; clear; close all;
 
 img = imread('text.png');      % Binary text image
@@ -18,7 +21,8 @@ imshow(imdilate(img,se)), title('Dilation');
 subplot(2,3,4)
 imshow(imopen(img,strel('disk',1))), title('Opening');
 
-broken = img; broken(50:60,50:60)=0;
+broken = img; 
+broken(50:60,50:60)=0;
 subplot(2,3,5)
 imshow(imclose(broken,strel('disk',5))), title('Closing');
 

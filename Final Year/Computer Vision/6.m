@@ -1,4 +1,7 @@
 % EXPERIMENT 6: Image Restoration
+% Perform image restoration by adding noise (Gaussian and salt-and-pepper)
+% and applying denoising filters such as mean and median filters 
+
 clc; clear; close all;
 
 img = rgb2gray(imread('peppers.png'));

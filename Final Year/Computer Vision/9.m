@@ -1,4 +1,6 @@
 % EXPERIMENT 9: Color Model Conversion & Enhancement
+% To perform Color Model Conversion and Enhancement. Convert RGB to HSV, YCbCr, and apply enhancement. 
+
 clc; clear; close all;
 
 rgb = im2double(imread('peppers.png'));
@@ -16,6 +18,7 @@ ycbcr_enh = ycbcr2rgb(ycbcr);
 
 %% ---- DISPLAY ----
 subplot(2,3,1), imshow(rgb), title('Original RGB');
+
 subplot(2,3,2), imshow(hsv(:,:,2)), title('Saturation (HSV)');
 subplot(2,3,3), imshow(hsv_enh), title('HSV Enhanced');
 
