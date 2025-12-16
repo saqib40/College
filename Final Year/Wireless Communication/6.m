@@ -20,30 +20,25 @@ xlabel('Time'), ylabel('Envelope (dB)')
 title('Rayleigh Fading Envelope')
 
 % Doppler Spectrum
-figure;
-[p,fq] = pwelch(h,[],[],[],fs,'centered');
-plot(fq,10*log10(p)), grid on
-xlabel('Frequency (Hz)'), ylabel('PSD (dB/Hz)')
-title('Doppler Spectrum')
+figure; 
+H=fftshift(abs(fft(h)));
+f=linspace(-fs/2,fs/2,length(H));
+plot(f,20*log10(H)), grid on
+xlim([-fd fd])
+xlabel('Frequency'), ylabel('Magnitude (dB)')
 
 % BER (QPSK)
 N = 1e4;
 data = randi([0 3],N,1);
-s = exp(1j*(pi/4 + data*pi/2));
-
+s = pskmod(data,4,pi/4);
 hN = h(1:N).';
-EbNo = 0:2:20; BER = zeros(size(EbNo));
+EbNo = 0:2:20;
 
-for k=1:length(EbNo)
-    snr = EbNo(k)+10*log10(2);
-    n = sqrt(1/10^(snr/10)/2)*(randn(N,1)+1j*randn(N,1));
-    r = hN.*s + n;
-    s_hat = r./hN;
-    det = mod(round((angle(s_hat)-pi/4)/(pi/2)),4);
-    BER(k) = mean(det~=data);
+for k = 1:length(EbNo)
+    n = awgn(hN.*s, EbNo(k)+3, 'measured');
+    shat = n./hN;
+    BER(k) = mean(pskdemod(shat,4,pi/4) ~= data);
 end
 
-figure;
 semilogy(EbNo,BER,'o-'), grid on
 xlabel('Eb/No (dB)'), ylabel('BER')
-title('BER in Rayleigh Fading Channel')

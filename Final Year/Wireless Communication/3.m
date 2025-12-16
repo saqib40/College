@@ -1,7 +1,7 @@
 clc; clear; close all;
 
 % Given
-c = 3e8; f = 2100e6; Pt = 1e-3;      % WCDMA
+c = 3e8; f = 2100e6; Pt = 45;      % WCDMA
 Gt = 1; Gr = 1; d0 = 1;              % dB, m
 n = [2 3.1 4 1.7 2.5 5];              % Environments
 
@@ -10,7 +10,7 @@ d = 100:10:2000;
 
 % Conversions
 lambda = c/f;
-Pt_dBm = 10*log10(Pt*1000);
+Pt_dBm = 10*log10(Pt);
 
 % Reference power
 Pr0 = Pt_dBm + Gt + Gr - 20*log10(4*pi*d0/lambda);

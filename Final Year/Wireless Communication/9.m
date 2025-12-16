@@ -1,27 +1,10 @@
-clc; clear; close all;
-
-% Parameters
-Nbits = 64; M = 4;              % QPSK
-Nsc = 4; Nfft = 16; cp = 4;
-
-% Transmitter
-data = randi([0 M-1],1,Nbits);
-mod = pskmod(data,M,pi/4);
-mod = reshape([mod zeros(1,mod(numel(mod),Nsc))],Nsc,[]).';
-ifft_out = ifft(mod,Nfft,2);
-tx = [ifft_out(:,end-cp+1:end) ifft_out];
-tx_sig = tx(:).';
-
-% Channel
-rx_sig = awgn(tx_sig,30);
-
-% Receiver
-rx = reshape(rx_sig,Nfft+cp,[]).';
-rx = rx(:,cp+1:end);
-fft_out = fft(rx,Nfft,2);
-rx_data = reshape(fft_out(:,1:Nsc).',1,[]);
-demod = pskdemod(rx_data,M,pi/4);
-
-% BER
-BER = mean(data~=demod(1:Nbits));
-fprintf('BER = %.4f\n',BER);
+data=randi([0 3],1,64);
+s=pskmod(data,4,pi/4);
+x=ifft(reshape(s,4,[]),16);
+tx=[x(end-3:end,:); x]; 
+tx=tx(:).';
+rx=awgn(tx,30);
+rx=fft(reshape(rx,20,[])(5:end,:),16);
+d=pskdemod(rx(:),4,pi/4);
+BER=mean(data~=d(1:64));
+print(BER)

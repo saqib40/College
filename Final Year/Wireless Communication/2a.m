@@ -5,7 +5,7 @@ hte = 30:100;                 % Tx height (m)
 hre = 10;                     % Rx height (m)
 d = 50e3;                     % Distance (m)
 f = 900;                      % Frequency (MHz)
-EIRP = 1e3;                   % EIRP (W)
+EIRP = 37;                   % EIRP
 Gr = 1;                       % Rx gain
 
 % Constants
@@ -13,7 +13,7 @@ c = 3e8;
 lambda = c/(f*1e6);
 
 % Conversions
-EIRP_dBm = 10*log10(EIRP/1e-3);
+EIRP_dBm = 10*log10(EIRP);
 Gr_dB = 10*log10(Gr);
 
 % Okumura constants
