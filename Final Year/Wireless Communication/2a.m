@@ -1,46 +1,45 @@
 clc; clear; close all;
 
-% --- Inputs ---
-hte = 30:1:100;                                   % Tx antenna height vector
-hre = input('Rx antenna height (3m < hre < 10m): ');
-d   = input('Distance from Base Station (m): ');  % Input in meters (e.g., 50000)
-f   = input('Frequency (MHz): ');
-EIRP = input('EIRP (Watts): ');
-Gr   = input('Rx Antenna Gain: ');
+% Inputs
+hte = 30:100;                 % Tx height (m)
+hre = 10;                     % Rx height (m)
+d = 50e3;                     % Distance (m)
+f = 900;                      % Frequency (MHz)
+EIRP = 1e3;                   % EIRP (W)
+Gr = 1;                       % Rx gain
 
-% --- Calculations ---
-% Constants and Conversions
+% Constants
 c = 3e8;
-lamda = c / (f * 1e6);
-EIRP_dBm = 10 * log10(EIRP / 1e-3);
-Gr_dB = 10 * log10(Gr);
+lambda = c/(f*1e6);
 
-% Environment Constants (Suburban)
-Amu = 43; Garea = 9;
+% Conversions
+EIRP_dBm = 10*log10(EIRP/1e-3);
+Gr_dB = 10*log10(Gr);
 
-% Gain Calculations
-% Logical check for hre compressed into one line
-Ghre = (hre > 3) * 20*log10(hre/3) + (hre <= 3) * 10*log10(hre/3); 
-Ghte = 20 * log10(hte / 200);             % Vector calculation for all heights
+% Okumura constants
+Amu = 43; 
+Garea = 9;
 
-% Path Loss and Power (Vectorized)
-Lf = 20 * log10((4 * pi * d) / lamda);    % Free Space Path Loss
-L50 = Lf + Amu - Ghte - Ghre - Garea;     % Mean Path Loss Vector
-Pr = EIRP_dBm - L50 + Gr_dB;              % Rx Power Vector
+% Gains
+Ghte = 20*log10(hte/200);
+Ghre = 20*log10(hre/3);
 
-% --- Output ---
-% Displaying results for the max height (hte = 100m) to match your Aim
-fprintf('\n--- Results (at hte = 100m) ---\n');
-fprintf('1. Free Space Path Loss (Lf):  %.4f dB\n', Lf);
-fprintf('2. Ghte (at 100m):             %.4f dB\n', Ghte(end));
-fprintf('3. Ghre:                       %.4f dB\n', Ghre);
-fprintf('4. Lambda:                     %.4f m\n', lamda);
-fprintf('5. L50 (Total Path Loss):      %.4f dB\n', L50(end));
-fprintf('6. Rx Power (Pr):              %.4f dBm\n', Pr(end));
+% Loss calculations
+Lf = 20*log10((4*pi*d)/lambda);
+L50 = Lf + Amu - Ghte - Ghre - Garea;
 
-% --- Plotting ---
-plot(hte, L50, 'LineWidth', 1.5);
-grid on;
-title(['Okumura Model: Path Loss vs Tx Height (f = ' num2str(f) ' MHz)']);
-xlabel('Transmitter Antenna Height h_{te} (m)');
-ylabel('Mean Path Loss L_{50} (dB)');
+% Received power
+Pr = EIRP_dBm - L50 + Gr_dB;
+
+% Display (at hte = 100 m)
+fprintf('Lf = %.2f dB\n',Lf);
+fprintf('Ghte = %.2f dB\n',Ghte(end));
+fprintf('Ghre = %.2f dB\n',Ghre);
+fprintf('Lambda = %.3f m\n',lambda);
+fprintf('L50 = %.2f dB\n',L50(end));
+fprintf('Pr = %.2f dBm\n',Pr(end));
+
+% Plot
+plot(hte,L50,'LineWidth',1.5), grid on
+xlabel('Tx height (m)'), ylabel('Path Loss L_{50} (dB)')
+title('Okumura Model')
